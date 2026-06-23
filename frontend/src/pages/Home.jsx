@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
+
 const levels = [
   {
     id: 1,
     title: "Fantasy Island",
-    image: "/level1.jpeg",
+    image: "/level1/level1.jpeg",
     difficulty: 2,
     icon: "🏝️",
     bgColor: "#06282C",
@@ -11,7 +13,7 @@ const levels = [
   {
     id: 2,
     title: "Robot City",
-    image: "/level2.jpeg",
+    image: "/level2/level2.jpeg",
     difficulty: 4,
     icon: "⚙️",
     bgColor: "#0B2340",
@@ -20,7 +22,7 @@ const levels = [
   {
     id: 3,
     title: "Cyber Tower",
-    image: "/level3.jpeg",
+    image: "/level3/level3.jpeg",
     difficulty: 5,
     icon: "🏢",
     bgColor: "#241245",
@@ -29,6 +31,7 @@ const levels = [
 ];
 
 export default function Home() {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-[url('/BG.png')] bg-cover bg-center text-white">
       <div className="min-h-screen bg-black/40 backdrop-blur-sm">
@@ -61,6 +64,7 @@ export default function Home() {
             {levels.map((level) => (
               <div
                 key={level.id}
+                onClick={() => navigate(`/game/${level.id}`)}
                 className="relative h-110 rounded-[28px] overflow-hidden border-2 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02]"
                 style={{
                   backgroundImage: `url(${level.image})`,
