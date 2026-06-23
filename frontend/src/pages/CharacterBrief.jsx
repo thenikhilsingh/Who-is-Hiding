@@ -1,85 +1,47 @@
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
-const levels = {
-  1: {
-    id: 1,
-    title: "Fantasy Island",
-    image: "/level1.jpeg",
-    characters: [
-      {
-        id: 1,
-        name: "Feeder",
-        image: "/level1/Feeder.png",
-      },
-      {
-        id: 2,
-        name: "Steve",
-        image: "/level1/Steve.png",
-      },
-      {
-        id: 3,
-        name: "Chuck Noland",
-        image: "/level1/Chuck-Noland.png",
-      },
-    ],
-  },
-
-  2: {
-    id: 2,
-    title: "Robot City",
-    image: "/level2.jpeg",
-    characters: [
-      {
-        id: 1,
-        name: "Dr Evil",
-        image: "/level2/Dr-Evil.png",
-      },
-      {
-        id: 2,
-        name: "Ghost Face",
-        image: "/level2/GhostFace.png",
-      },
-      {
-        id: 3,
-        name: "EarthWorm Jim",
-        image: "/level2/EarthWorm-Jim.png",
-      },
-    ],
-  },
-
-  3: {
-    id: 3,
-    title: "Cyber Tower",
-    image: "/level3.jpeg",
-    characters: [
-      {
-        id: 1,
-        name: "Spider Man",
-        image: "/level3/Spider-Man.png",
-      },
-      {
-        id: 2,
-        name: "Brian",
-        image: "/level3/Brian.png",
-      },
-      {
-        id: 3,
-        name: "Rabbit",
-        image: "/level3/Rabbit.png",
-      },
-    ],
-  },
-};
+import useAxios from "../hooks/useAxios";
 
 export default function CharacterBrief() {
   const { levelId } = useParams();
   const navigate = useNavigate();
+  const api = useAxios();
 
-  const level = levels[levelId];
+  const [characters, setCharacters] = useState([]);
+  const [level, setLevel] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const getCharacters = async () => {
+    try {
+      const response = await api.get(`/api/game/levels/${levelId}/characters`);
+
+      setCharacters(response.data.characters);
+
+      // Populate se level details aa rahi hain
+      setLevel(response.data.characters[0]?.levelId);
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getCharacters();
+  }, [levelId]);
 
   const startGame = () => {
-    navigate(`game/play/${levelId}`);
+    navigate(`/game/play/${levelId}`);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[url('/BG.png')] bg-cover bg-center flex justify-center items-center text-white text-3xl font-bold">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[url('/BG.png')] bg-cover bg-center text-white">
@@ -87,7 +49,7 @@ export default function CharacterBrief() {
         <div className="max-w-6xl w-full">
           {/* Title */}
           <div className="text-center mb-10">
-            <h1 className="text-5xl font-black">{level.title}</h1>
+            <h1 className="text-5xl font-black">{level?.title}</h1>
 
             <p className="text-slate-300 mt-3 text-lg">
               Find all hidden characters before time runs out.
@@ -96,9 +58,9 @@ export default function CharacterBrief() {
 
           {/* Characters */}
           <div className="grid md:grid-cols-3 gap-8">
-            {level.characters.map((character) => (
+            {characters.map((character) => (
               <div
-                key={character.id}
+                key={character._id}
                 className="bg-[#082B33]/90 border border-[#0EA5A4] rounded-3xl p-6 text-center"
               >
                 <img
@@ -116,7 +78,7 @@ export default function CharacterBrief() {
           <div className="flex justify-center mt-12">
             <button
               onClick={startGame}
-              className="px-12 py-5 rounded-2xl bg-yellow-400 text-black font-bold text-2xl hover:bg-yellow-300 transition"
+              className="px-12 py-5 rounded-2xl bg-yellow-400 text-black font-bold text-2xl hover:bg-yellow-300 transition cursor-pointer"
             >
               START HUNT
             </button>

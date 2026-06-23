@@ -1,37 +1,40 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { DataContext } from "../App";
 
-const levels = [
-  {
-    id: 1,
-    title: "Fantasy Island",
-    image: "/level1/level1.jpeg",
-    difficulty: 2,
+const levelStyles = {
+  "Fantasy Island": {
     icon: "🏝️",
-    bgColor: "#06282C",
     borderColor: "#14B8A6",
+    bgColor: "#06282C",
   },
-  {
-    id: 2,
-    title: "Robot City",
-    image: "/level2/level2.jpeg",
-    difficulty: 4,
+
+  "Robot City": {
     icon: "⚙️",
-    bgColor: "#0B2340",
     borderColor: "#3B82F6",
+    bgColor: "#0B2340",
   },
-  {
-    id: 3,
-    title: "Cyber Tower",
-    image: "/level3/level3.jpeg",
-    difficulty: 5,
+
+  "Cyber Tower": {
     icon: "🏢",
-    bgColor: "#241245",
     borderColor: "#A855F7",
+    bgColor: "#241245",
   },
-];
+};
 
 export default function Home() {
   const navigate = useNavigate();
+
+  const { levels } = useContext(DataContext);
+
+  if (!levels?.length) {
+    return (
+      <div className="min-h-screen bg-[url('/BG.png')] bg-cover bg-center flex justify-center items-center text-white text-2xl">
+        Loading Levels...
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[url('/BG.png')] bg-cover bg-center text-white">
       <div className="min-h-screen bg-black/40 backdrop-blur-sm">
@@ -61,60 +64,64 @@ export default function Home() {
         {/* Cards */}
         <section className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {levels.map((level) => (
-              <div
-                key={level.id}
-                onClick={() => navigate(`/game/${level.id}`)}
-                className="relative h-110 rounded-[28px] overflow-hidden border-2 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02]"
-                style={{
-                  backgroundImage: `url(${level.image})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  borderColor: level.borderColor,
-                }}
-              >
-                {/* Dark Overlay */}
-                <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black/70" />
+            {levels.map((level, index) => {
+              const style = levelStyles[level.title];
 
-                {/* Bottom Floating Card */}
+              return (
                 <div
-                  className="absolute bottom-4 left-4 right-4 rounded-3xl border p-4 backdrop-blur-md"
+                  key={level._id}
+                  onClick={() => navigate(`/game/${level._id}`)}
+                  className="relative h-110 rounded-[28px] overflow-hidden border-2 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02]"
                   style={{
-                    backgroundColor: `${level.bgColor}EE`,
-                    borderColor: level.borderColor,
+                    backgroundImage: `url(${level.image})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    borderColor: style.borderColor,
                   }}
                 >
-                  <div className="flex items-center gap-4">
-                    {/* Icon */}
-                    <div
-                      className="h-14 w-14 rounded-full border flex items-center justify-center text-2xl shrink-0"
-                      style={{
-                        borderColor: level.borderColor,
-                      }}
-                    >
-                      {level.icon}
-                    </div>
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black/70" />
 
-                    {/* Content */}
-                    <div>
-                      <h2 className="font-bold text-2xl">
-                        {level.id}. {level.title}
-                      </h2>
+                  {/* Bottom Card */}
+                  <div
+                    className="absolute bottom-4 left-4 right-4 rounded-3xl border p-4 backdrop-blur-md"
+                    style={{
+                      backgroundColor: `${style.bgColor}EE`,
+                      borderColor: style.borderColor,
+                    }}
+                  >
+                    <div className="flex items-center gap-4">
+                      {/* Icon */}
+                      <div
+                        className="h-14 w-14 rounded-full border flex items-center justify-center text-2xl shrink-0"
+                        style={{
+                          borderColor: style.borderColor,
+                        }}
+                      >
+                        {style.icon}
+                      </div>
 
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-slate-300 text-sm">
-                          Difficulty:
-                        </span>
+                      {/* Content */}
+                      <div>
+                        <h2 className="font-bold text-2xl">
+                          {index + 1}. {level.title}
+                        </h2>
 
-                        <span className="text-yellow-400 text-lg">
-                          {"★".repeat(level.difficulty)}
-                        </span>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-slate-300 text-sm">
+                            Difficulty:
+                          </span>
+
+                          <span className="text-yellow-400 text-lg">
+                            {"★".repeat(level.difficulty)}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       </div>

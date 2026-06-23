@@ -24,5 +24,3 @@ const levelSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Level", levelSchema);
-
-await Level.create();

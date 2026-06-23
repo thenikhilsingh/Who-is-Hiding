@@ -3,7 +3,7 @@ const Character = require("../models/character");
 
 const getLevels = async (req, res) => {
   try {
-    const levels = Level.find();
+    const levels = await Level.find();
     res.status(200).json({
       levels,
     });
@@ -20,7 +20,7 @@ const getLevelCharacters = async (req, res) => {
 
     const characters = await Character.find({
       levelId,
-    });
+    }).populate("levelId", "title image");
 
     res.status(200).json({
       characters,
