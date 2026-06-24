@@ -3,80 +3,11 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useAxios from "../hooks/useAxios";
 
-// const levels = {
-//   1: {
-//     title: "Fantasy Island",
-//     image: "/level1/level1.jpeg",
-//     characters: [
-//       {
-//         id: 1,
-//         name: "Feeder",
-//         image: "/level1/Feeder.png",
-//       },
-//       {
-//         id: 2,
-//         name: "Steve",
-//         image: "/level1/Steve.png",
-//       },
-//       {
-//         id: 3,
-//         name: "Chuck Noland",
-//         image: "/level1/Chuck-Noland.png",
-//       },
-//     ],
-//   },
-
-//   2: {
-//     title: "Robot City",
-//     image: "/level2/level2.jpeg",
-//     characters: [
-//       {
-//         id: 1,
-//         name: "Dr Evil",
-//         image: "/level2/Dr-Evil.png",
-//       },
-//       {
-//         id: 2,
-//         name: "Ghost Face",
-//         image: "/level2/GhostFace.png",
-//       },
-//       {
-//         id: 3,
-//         name: "EarthWorm Jim",
-//         image: "/level2/EarthWorm-Jim.png",
-//       },
-//     ],
-//   },
-
-//   3: {
-//     title: "Cyber Tower",
-//     image: "/level3/level3.jpeg",
-//     characters: [
-//       {
-//         id: 1,
-//         name: "Spider Man",
-//         image: "/level3/Spider-Man.png",
-//       },
-//       {
-//         id: 2,
-//         name: "Brian",
-//         image: "/level3/Brian.png",
-//       },
-//       {
-//         id: 3,
-//         name: "Rabbit",
-//         image: "/level3/Rabbit.png",
-//       },
-//     ],
-//   },
-// };
-
 export default function Game() {
   const { levelId } = useParams();
   const navigate = useNavigate();
   const api = useAxios();
 
-  // const level = levels[levelId];
   const [level, setLevel] = useState(null);
   const [characters, setCharacters] = useState([]);
   const getLevelData = async () => {
@@ -120,6 +51,25 @@ export default function Game() {
       x,
       y,
     });
+  };
+
+  const checkCharacter = async (characterId) => {
+    try {
+      const response = api.post("/api/game/check", {
+        characterId,
+        x: clickPosition.x,
+        y: clickPosition.y,
+      });
+      console.log(response.data);
+      if (response.data.found) {
+        alert("Correct!");
+      } else {
+        alert("Wrong Location!");
+      }
+      setClickPosition(null);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (!level) {
@@ -179,10 +129,7 @@ export default function Game() {
                   <button
                     key={character._id}
                     className="flex items-center gap-3 w-full px-4 py-3 hover:bg-slate-800 transition"
-                    onClick={() => {
-                      console.log(character.name);
-                      setClickPosition(null);
-                    }}
+                    onClick={() => checkCharacter(character._id)}
                   >
                     <img
                       src={character.image}

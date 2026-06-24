@@ -32,7 +32,42 @@ const getLevelCharacters = async (req, res) => {
   }
 };
 
+const checkCharacter = async (req, res) => {
+  try {
+    const { characterId, x, y } = req.body;
+
+    const character = await Character.findById(characterId);
+    if (!character) {
+      return res.status(404).json({
+        message: "Character not found",
+      });
+    }
+
+    const isCorrect =
+      x >= character.xMin &&
+      x <= character.xMax &&
+      y >= character.yMin &&
+      y <= character.yMax;
+
+    if (isCorrect) {
+      return res.status(200).json({
+        found: true,
+        message: "Character found!",
+      });
+    }
+    return res.status(200).json({
+      found: false,
+      message: "Wrong location!",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getLevels,
   getLevelCharacters,
+  checkCharacter,
 };
