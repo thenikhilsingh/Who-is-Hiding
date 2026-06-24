@@ -11,6 +11,10 @@ import {
 } from "react-router-dom";
 import CharacterBrief from "./pages/CharacterBrief.jsx";
 import Game from "./pages/Game.jsx";
+import Leaderboard from "./pages/Leaderboard.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Leaderboards from "./pages/Leaderboards.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,6 +22,8 @@ const router = createBrowserRouter(
       <Route path="" element={<Home />}></Route>
       <Route path="/game/:levelId" element={<CharacterBrief />}></Route>
       <Route path="/game/play/:levelId" element={<Game />}></Route>
+      <Route path="/leaderboards" element={<Leaderboards />} />
+      <Route path="/leaderboard/:levelId" element={<Leaderboard />} />
     </Route>,
   ),
 );
@@ -25,5 +31,6 @@ const router = createBrowserRouter(
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <RouterProvider router={router} />
+    <ToastContainer position="top-right" autoClose={2500} theme="dark" />
   </StrictMode>,
 );

@@ -21,7 +21,8 @@ const gameSessionSchema = new mongoose.Schema(
 
     foundCharacters: [
       {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Character",
       },
     ],
 

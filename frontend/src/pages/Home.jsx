@@ -56,8 +56,11 @@ export default function Home() {
             </p>
           </div>
 
-          <button className="px-6 py-3 rounded-xl border border-slate-700 bg-slate-900/70 hover:bg-slate-800 transition cursor-pointer">
-            Leaderboard
+          <button
+            onClick={() => navigate("/leaderboards")}
+            className="px-6 py-3 rounded-xl border border-slate-700 bg-slate-900/70 hover:bg-slate-800 transition cursor-pointer"
+          >
+            Leaderboards
           </button>
         </header>
 
