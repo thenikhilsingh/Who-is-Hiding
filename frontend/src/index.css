@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+.game-image {
+  cursor:
+    url("/cursor.png") 16 16,
+    crosshair;
+}

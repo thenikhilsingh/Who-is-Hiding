@@ -202,7 +202,7 @@ export default function Game() {
               <img
                 src={level.image}
                 alt={level.title}
-                className="w-full rounded-2xl"
+                className="game-image w-full rounded-2xl"
                 onClick={!gameCompleted ? handleImageClick : undefined}
               />
 
